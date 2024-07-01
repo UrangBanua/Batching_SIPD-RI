@@ -32,7 +32,7 @@ def pre_login(service, username, password, tahun):
     
     # Menambahkan loading text
     for _ in tqdm(range(100), desc="Loading pre-login", ascii=True, unit_scale=True, ncols=70, bar_format='{desc}: |{bar}| {percentage:3.0f}%'):
-        time.sleep(0.03)
+        time.sleep(0.01)
     
     print(Fore.GREEN + f"Proses login pengambilan token" + Style.RESET_ALL)
     #print(Fore.GREEN + f"Pre-login response: {json.dumps(data_user[0], indent=4)}" + Style.RESET_ALL + '\n')
@@ -48,10 +48,22 @@ def login(service, id_daerah, id_role, id_skpd, id_pegawai, password, tahun, use
     
     # Menambahkan loading text
     for _ in tqdm(range(100), desc="Loading login", ascii=True, unit_scale=True, ncols=70, bar_format='{desc}: |{bar}| {percentage:3.0f}%'):
-        time.sleep(0.03)
+        time.sleep(0.01)
     
-    print(Fore.GREEN + f"Login berhasil" + Style.RESET_ALL + '\n')
-    
-    #print(Fore.GREEN + f"Login response: {json.dumps(data_token['refresh_token'], indent=4)}" + Style.RESET_ALL + '\n')
+    print(Fore.GREEN + f"Login berhasil" + Style.RESET_ALL)
+    print(Fore.CYAN + f"Barear token: {json.dumps(data_token['refresh_token'], indent=4)}" + Style.RESET_ALL + '\n')
     
     return data_token
+
+# Fungsi baca data json berupa capaian serapan realisasi SKPD dari SIPD-RI menggunakan rest api dengan header token
+def capaian_serapan_realisasi(service, token):
+    url = service + '/pengeluaran/strict/dashboard/statistik-belanja'
+    headers = {'Authorization': 'Bearer ' + token}
+    response = requests.get(url, headers=headers)
+    data_serapan = json.loads(response.text)
+    filter_data_serapan = [skpd for skpd in data_serapan if skpd["id_skpd"] == 65]
+    # print data serapan
+    print(Fore.GREEN + f"Serapan Realisasi: {json.dumps(filter_data_serapan, indent=4)}" + 
+          Style.RESET_ALL + '\n')
+
+    return data_serapan

@@ -1,10 +1,22 @@
-# ~~~~~~~~~~~~~~~~~~~~ MENU UTAMA ~~~~~~~~~~~~~~~~~~~~
-def main_menu():
+from typing import Dict, List, Optional
+from rest_call import capaian_serapan_realisasi
+
+def main_menu(data_login: Dict[str, str], data_user: List[Dict[str, str]]) -> None:
+    """
+    Display the main menu and handle user input.
+
+    Args:
+        data_login (Dict[str, str]): The login data.
+        data_user (List[Dict[str, str]]): The user data.
+
+    Returns:
+        None
+    """
     print("\n~~~~~~~~~~~~~~~~~~~~ Menu Utama ~~~~~~~~~~~~~~~~~~~~")
-    print("1. Proporsi Anggaran vs Realisasi")
-    print("2. BUD - Review")
-    print("3. Tatausaha - Validasi")
-    print("4. Bendahara - Review")
+    print("1. Capaian Serapan Realisasi SKPD")
+    print("3. Register - STBP Pendapatan")
+    print("2. Register - SP2D Belanja")
+    print("4. LPJ Fungsional")
     print("5. Akuntansi - Posting")
     print("6. Akuntansi - Laporan")
     print("9. Keluar")
@@ -12,7 +24,7 @@ def main_menu():
     choice = input("Masukkan pilihan Anda: ")
 
     if choice == "1":
-        print("menu 1")
+        capaian_serapan_realisasi(data_login['service'], data_user[0]['token'])
     elif choice == "2":
         print("menu 2")
     elif choice == "3":
@@ -29,18 +41,27 @@ def main_menu():
     else:
         print("Pilihan tidak valid. Silakan masukkan pilihan yang benar.")
 
-    return_to_menu()
+    return_to_menu(data_login, data_user)
 
-# ~~~~~~~~~~~~~~~~~~~~ KEMBALI ke MENU UTAMA ~~~~~~~~~~~~~~~~~~~~ 
-def return_to_menu():
+def return_to_menu(data_login: Optional[Dict[str, str]] = None, data_user: Optional[List[Dict[str, str]]] = None) -> None:
+    """
+    Handle user input to return to the main menu or exit the program.
+
+    Args:
+        data_login (Optional[Dict[str, str]]): The login data. Defaults to None.
+        data_user (Optional[List[Dict[str, str]]]): The user data. Defaults to None.
+
+    Returns:
+        None
+    """
     print("\n")
     choice = input("Ketik 'menu' untuk kembali ke menu utama atau 'keluar' untuk keluar: ")
     
     if choice.lower() == "menu":
-        main_menu()
+        main_menu(data_login, data_user)
     elif choice.lower() == "keluar":
         print("Terima kasih telah menggunakan program ini. Sampai jumpa!")
         exit()
     else:
         print("Pilihan tidak valid. Silakan masukkan pilihan yang benar.")
-        return_to_menu()
+        return_to_menu(data_login, data_user)

@@ -3,6 +3,7 @@ import json
 import locale
 import pickle
 import getpass
+from typing import Dict, List
 #import pandas as pd
 from tqdm import tqdm
 from bs4 import BeautifulSoup
@@ -39,8 +40,11 @@ try:
 
     # tambahkan data token pada data_user
     data_user[0]['token'] = data_token['refresh_token']
-    print(Fore.GREEN + f"Sebagai: {json.dumps(data_user[0]['nama_role'], indent=4)}" + Style.RESET_ALL + '\n')
-    # call main menu
-    #main_menu()
+    print(Fore.GREEN + f"Sebagai : {json.dumps(data_user[0]['nama_role'], indent=4)}" + Style.RESET_ALL)
+    print(Fore.GREEN + f"Pada : {json.dumps(data_user[0]['nama_skpd'], indent=4)}" + Style.RESET_ALL + '\n')
+
 except Exception as e:
     print(f"Error: {str(e)}")
+
+# call main menu
+main_menu(data_login, data_user)
