@@ -3,8 +3,11 @@ import time
 import configparser
 import json
 import requests
+import locale
 from colorama import Fore, Style
 from tqdm import tqdm
+
+locale.setlocale(locale.LC_ALL, 'id_ID.UTF-8')  # Set Indonesian locale (change if needed)
 
 # Fungsi untuk baca file login.config dengan isi variabel tahun, username & password
 def baca_config(file_config):
@@ -62,8 +65,21 @@ def capaian_serapan_realisasi(service, token):
     response = requests.get(url, headers=headers)
     data_serapan = json.loads(response.text)
     filter_data_serapan = [skpd for skpd in data_serapan if skpd["id_skpd"] == 65]
+ 
     # print data serapan
-    print(Fore.GREEN + f"Serapan Realisasi: {json.dumps(filter_data_serapan, indent=4)}" + 
-          Style.RESET_ALL + '\n')
+    print(Fore.GREEN + f"Serapan Realisasi ")
+    print(f"SKPD : {filter_data_serapan[0]['kode_skpd'] + ' - ' + filter_data_serapan[0]['nama_skpd']}")
+    print(f"Anggaran  : {locale.currency(filter_data_serapan[0]['anggaran'], grouping=True)}")
+    
+    anggaran = filter_data_serapan[0]['anggaran']
+    realisasi_rencana = filter_data_serapan[0]['realisasi_rencana']
+    realisasi_rill = filter_data_serapan[0]['realisasi_rill']
+    pengajuan_percentage = (realisasi_rencana / anggaran) * 100 if anggaran != 0 else 0
+    pengajuan_percentage_str = f"{pengajuan_percentage:.2f}"
+    pencairan_percentage = (realisasi_rill / anggaran) * 100 if anggaran != 0 else 0
+    pencairan_percentage_str = f"{pencairan_percentage:.2f}"
+
+    print(f"Pengajuan : {locale.currency(realisasi_rencana, grouping=True)} ({pengajuan_percentage_str}%)")
+    print(f"Pencairan : {locale.currency(realisasi_rill, grouping=True)} ({pencairan_percentage_str}%)" + Style.RESET_ALL + '\n')
 
     return data_serapan
